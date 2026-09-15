@@ -5,6 +5,7 @@
   "author": "Logos Core Team",
   "type": "core",
   "interface": "cdylib",
+  "platform": true,
   "category": "wallet",
   "main": "token_list_module_plugin",
   "dependencies": [],
