@@ -2,7 +2,24 @@
   description = "Logos token_list module — Uniswap token-lists fetch/parse/merge + custom list (proxyable, fail-closed).";
 
   inputs = {
-    logos-module-builder.url = "github:logos-co/logos-module-builder";
+    # A rev on the logos-fleet fork, not logos-co, and not a floating branch:
+    # a branch relocks under whoever runs `nix flake update` next, which is how
+    # this input drifted onto a builder the flake cannot evaluate against.
+    #
+    # metadata.json declares `"platform": true` (ADR 0009: this module owns the
+    # socket), a key only the fleet builder knows. An older builder's near-miss
+    # guard for `platforms` overlays THROWS on it -- "rename it to `platforms`
+    # (plural)", which names the wrong fix for a key spelled correctly -- and a
+    # throw at parse time takes every output of this flake with it,
+    # `config.platform` included. The workspace's `follows` substitutes
+    # its own fleet builder and so hid that for as long as nobody evaluated this
+    # repo on its OWN lock; `ws test logos-evm-token-list-module` and a bare `nix
+    # build` here both do. logos-workspace#214.
+    #
+    # The mobile Bare output below is the second reason: the mobile pseudo-system
+    # keys in `packages` are a property of the BUILDER, and only this line has
+    # them.
+    logos-module-builder.url = "github:logos-fleet/logos-module-builder/738f1a6ef5a6f755f8433297ac0d2ef54bba8d2f";
   };
 
   outputs = inputs@{ self, logos-module-builder, ... }:
