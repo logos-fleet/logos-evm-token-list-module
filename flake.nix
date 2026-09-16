@@ -2,14 +2,16 @@
   description = "Logos token_list module — Uniswap token-lists fetch/parse/merge + custom list (proxyable, fail-closed).";
 
   inputs = {
-    # A rev on the logos-fleet fork, not logos-co, and not a floating branch.
+    # A rev on the logos-fleet fork, not logos-co, and not a floating branch:
+    # a branch relocks under whoever runs `nix flake update` next, which is how
+    # this input drifted onto a builder the flake cannot evaluate against.
     #
     # metadata.json declares `"platform": true` (ADR 0009: this module owns the
-    # socket), and that key is one only the fleet builder parses. An older
-    # builder's near-miss guard for `platforms` overlays THROWS on it -- "rename
-    # it to `platforms` (plural)", which names the wrong fix for a key spelled
-    # correctly -- and a throw at parse time takes every output of this flake
-    # with it, `config.platform` included. The workspace's `follows` substitutes
+    # socket), a key only the fleet builder knows. An older builder's near-miss
+    # guard for `platforms` overlays THROWS on it -- "rename it to `platforms`
+    # (plural)", which names the wrong fix for a key spelled correctly -- and a
+    # throw at parse time takes every output of this flake with it,
+    # `config.platform` included. The workspace's `follows` substitutes
     # its own fleet builder and so hid that for as long as nobody evaluated this
     # repo on its OWN lock; `ws test logos-evm-token-list-module` and a bare `nix
     # build` here both do. logos-workspace#214.
